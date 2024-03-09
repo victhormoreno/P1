@@ -12,7 +12,6 @@ int main(int argc, char *argv[]) {
     int   trm;
     float *x;
     short *buffer;
-    bool fic_res = false;
     FILE  *fpWave;
     FILE  *fpTxt;
 
@@ -27,8 +26,8 @@ int main(int argc, char *argv[]) {
     }
 
     if(argv[2] != NULL){
-        fic_res = true;
-        if ((fpTxt = abre_results(argv[2])) == NULL) {
+        fpTxt = fopen(argv[2], "w"); // Open the output file for writing
+        if (fpTxt == NULL) {
             fprintf(stderr, "Error al abrir el fichero de salida %s (%s)\n", argv[2], strerror(errno));
             return -1;
         }
@@ -64,17 +63,22 @@ int main(int argc, char *argv[]) {
         float am = compute_am(x, N);
         float zcr = compute_zcr(x, N, fm);
 
-        printf("%d\t%f\t%f\t%f\n", trm, pwr, am, zcr);
-
-        if(fic_res) escribe_resultados(fpTxt, trm, pwr, am, zcr);
+        if (fpTxt != NULL) {
+            fprintf(fpTxt, "%d\t%f\t%f\t%f\n", trm, pwr, am, zcr); // Write results to the output file
+        } else {
+            printf("%d\t%f\t%f\t%f\n", trm, pwr, am, zcr); // Print to console if no output file is provided
+        }
 
         trm += 1;
     }
 
     cierra_wave(fpWave);
-    if(fic_res) cierra_resultados(fpTxt);
     free(buffer);
     free(x);
+
+    if (fpTxt != NULL) {
+    fclose(fpTxt); // Close the output file if opened
+    }
 
     return 0;
 }

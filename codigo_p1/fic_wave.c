@@ -4,11 +4,9 @@
 FILE    *abre_wave(const char *ficWave, float *fm) {
     FILE    *fpWave;
 
-    FILE    *fpWave;
-    
     if ((fpWave = fopen(ficWave, "r")) == NULL) return NULL;
     
-    int32_t f;
+    int f;
     if (fseek(fpWave, 24, SEEK_SET) < 0) return NULL;
     fread(&f, sizeof(f), 1, fpWave);
     *fm = f;
@@ -17,27 +15,12 @@ FILE    *abre_wave(const char *ficWave, float *fm) {
     return fpWave;
 }
 
-FILE    *abre_resultados(const char *ficTxt) {
-    FILE    *fpTxt;
-    if ((fpTxt = fopen(ficTxt, "w")) == NULL) return NULL;
-    return fpTxt;
-}
-
 size_t   lee_wave(void *x, size_t size, size_t nmemb, FILE *fpWave) {
     return fread(x, size, nmemb, fpWave);
 }
 
-void   escribe_resultados(FILE *fpTxt, int trm, float pwr, float am, float zcr) {
-    fprintf(fpTxt, "%d\t%f\t%f\t%f\n", trm, pwr, am, zcr);
-    return;
-}
-
 void    cierra_wave(FILE *fpWave) {
     fclose(fpWave);
-}
-
-void    cierra_resultados(FILE *fpTxt) {
-    fclose(fpTxt);
 }
 
 unsigned int mono_channel(FILE *file_wav){
