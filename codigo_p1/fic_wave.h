@@ -22,7 +22,7 @@
  * @param fm Puntero a la variable donde se almacenará la frecuencia de muestreo.
  * @return Puntero al archivo abierto o NULL si hay un error.
  */
-FILE   *abre_wave(const char *ficWave, float *fm);
+FILE   *abre_wave(const char *ficWave, float *fm, bool *mono);
 
 /**
  * @brief Lee datos desde un archivo WAVE abierto.
@@ -41,32 +41,5 @@ size_t lee_wave(void *x, size_t size, size_t nmemb, FILE *fpWave);
  * @param fpWave Puntero al archivo WAVE abierto.
  */
 void   cierra_wave(FILE *fpWave);
-
-
-/**
- * @brief Abre un archivo de texto para los resultados.
- *
- * @param ficTxt Nombre del archivo de texto.
- * @return Puntero al archivo abierto o NULL si hay un error.
- */
-FILE    *abre_resultados(const char *ficTxt);
-
-/**
- * @brief Escribe resultados en un archivo de texto.
- *
- * @param fpTxt Puntero al archivo de texto abierto.
- * @param trm Número de términos.
- * @param pwr Potencia.
- * @param am Amplitud.
- * @param zcr Tasa de cruces por cero.
- */
-void   escribe_resultados(FILE *fpTxt, int trm, float pwr, float am, float zcr);
-
-/**
- * @brief Cierra el archivo de texto con los resultados.
- *
- * @param fpTxt Puntero al archivo de texto abierto.
- */
-void    cierra_resultados(FILE *fpTxt);
 
 #endif	/* FIC_WAV_H	*/

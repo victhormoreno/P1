@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <errno.h>
 #include "pav_analysis.h"
 #include "fic_wave.h"
@@ -8,6 +9,7 @@
 int main(int argc, char *argv[]) {
     float durTrm = 0.010;
     float fm;
+    bool  mono;
     int   N;
     int   trm;
     float *x;
@@ -20,7 +22,7 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    if ((fpWave = abre_wave(argv[1], &fm)) == NULL) {
+    if ((fpWave = abre_wave(argv[1], &fm, &mono)) == NULL) {
         fprintf(stderr, "Error al abrir el fichero WAVE de entrada %s (%s)\n", argv[1], strerror(errno));
         return -1;
     }
@@ -31,20 +33,6 @@ int main(int argc, char *argv[]) {
             fprintf(stderr, "Error al abrir el fichero de salida %s (%s)\n", argv[2], strerror(errno));
             return -1;
         }
-    }
-
-    unsigned int mono = mono_channel(fpWave);
-    unsigned int bps = bits_per_sample(fpWave);
-    if(mono != 1){
-        printf("Error: no es monocanal\n");
-        return -1;
-    }
-    else if(bps!=16){
-        printf("Error: no tiene 16 bits per sample\n");
-        return -1;
-    }
-    else{
-        printf("Es mono canal y de 16 bits per sample, mostramos los distintos parámetros calculados:\n");
     }
 
     N = durTrm * fm;
