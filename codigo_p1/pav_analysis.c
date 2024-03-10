@@ -2,9 +2,23 @@
 #include "pav_analysis.h"
 
 float compute_power(const float *x, unsigned int N) {
-    float P = 1e-6;
-    for (int n = 0; n < N; n++) P += x[n] * x[n];
+    float P = 1e-12, sum = 0.0;
+    float w[N];
+
+    finestra_hamming(w, N);
+
+    for (int n = 0; n < N; ++n) {
+        P += x[n] * w[n] * x[n] * w[n];
+        sum += w[n] * w[n];
+    }
+
     return log10(P/N) * 10;
+}
+
+void finestra_hamming(float *w, unsigned int N) {
+    for (int n = 0; n < N; ++n) {
+        w[n] = 0.53836 - 0.46164 * cos(2.0 * M_PI * n / (N - 1));
+    }
 }
 
 float compute_am(const float *x, unsigned int N) {
