@@ -12,7 +12,7 @@ float compute_power(const float *x, unsigned int N) {
         sum += w[n] * w[n];
     }
 
-    return log10(P/N) * 10;
+    return log10(P/sum) * 10;
 }
 
 void finestra_hamming(float *w, unsigned int N) {
