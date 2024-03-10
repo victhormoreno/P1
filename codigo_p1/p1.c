@@ -9,7 +9,7 @@
 int main(int argc, char *argv[]) {
     float durTrm = 0.010;
     float fm;
-    bool  mono;
+    bool  mono, txt = false;
     int   N;
     int   trm;
     float *x;
@@ -28,11 +28,12 @@ int main(int argc, char *argv[]) {
     }
 
     if(argv[2] != NULL){
-        fpTxt = fopen(argv[2], "w"); // Open the output file for writing
+        fpTxt = fopen(argv[2], "w"); 
         if (fpTxt == NULL) {
             fprintf(stderr, "Error al abrir el fichero de salida %s (%s)\n", argv[2], strerror(errno));
             return -1;
         }
+        txt = true;
     }
 
     N = durTrm * fm;
@@ -42,7 +43,6 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-
     trm = 0;
     while (lee_wave(buffer, sizeof(*buffer), N, fpWave) == N) {
         for (int n = 0; n < N; n++) x[n] = buffer[n] / (float) (1 << 15);
@@ -51,22 +51,19 @@ int main(int argc, char *argv[]) {
         float am = compute_am(x, N);
         float zcr = compute_zcr(x, N, fm);
 
-        if (fpTxt != NULL) {
-            fprintf(fpTxt, "%d\t%f\t%f\t%f\n", trm, pwr, am, zcr); // Write results to the output file
-        } else {
-            printf("%d\t%f\t%f\t%f\n", trm, pwr, am, zcr); // Print to console if no output file is provided
-        }
+        if (txt) fprintf(fpTxt, "%d\t%f\t%f\t%f\n", trm, pwr, am, zcr); // Write results to the output file
+        else     printf("%d\t%f\t%f\t%f\n", trm, pwr, am, zcr); // Print to console if no output file is provided
+        
 
         trm += 1;
     }
 
     cierra_wave(fpWave);
+    if (txt) fclose(fpTxt); 
+    
     free(buffer);
     free(x);
 
-    if (fpTxt != NULL) {
-    fclose(fpTxt); // Close the output file if opened
-    }
 
     return 0;
 }
